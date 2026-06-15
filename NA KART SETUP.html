@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+	<link rel="manifest" href="manifest.json">
+	<meta name="theme-color" content="#0b0f19">
+	<link rel="apple-touch-icon" href="icon-192.png">
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js');
+    });
+  }
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulatore Setup Kart 4T Definitivo - CRG vs GOLD</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #141b2d;
+            --panel-bg: #1f293d;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-gold: #f59e0b;
+            --accent-red: #ef4444;
+            --border-color: #2d3748;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 28px;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        header h1 span {
+            color: var(--accent-blue);
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .chassis-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn-chassis {
+            flex: 1;
+            max-width: 250px;
+            background: #1e293b;
+            color: white;
+            border: 2px solid #334155;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .btn-chassis span {
+            display: block;
+            font-size: 12px;
+            font-weight: normal;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .btn-chassis.active-crg {
+            border-color: var(--accent-red);
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+        }
+
+        .btn-chassis.active-crg span { color: #fca5a5; }
+
+        .btn-chassis.active-gold {
+            border-color: var(--accent-gold);
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-gold);
+        }
+
+        .btn-chassis.active-gold span { color: #fde047; }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 850px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-title {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #fff;
+            margin-bottom: 15px;
+            padding-left: 8px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .input-panel {
+            background: var(--panel-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .tire-panel {
+            background: rgba(59, 130, 246, 0.05);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .input-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+        }
+
+        .input-group label span.val-display {
+            color: var(--accent-blue);
+            font-family: monospace;
+            font-size: 15px;
+        }
+
+        .input-group input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            background: #0f172a;
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .input-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            cursor: pointer;
+        }
+
+        .input-group select {
+            width: 100%;
+            background: #0f172a;
+            color: #fff;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 6px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .output-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .metric-card {
+            background: var(--panel-bg);
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .metric-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #e2e8f0;
+        }
+
+        .metric-value {
+            font-size: 18px;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .progress-container {
+            background: #0f172a;
+            height: 14px;
+            border-radius: 7px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid #1e293b;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 50%;
+            background: var(--accent-blue);
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .target-window {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border-left: 1px dashed rgba(255, 255, 255, 0.3);
+            border-right: 1px dashed rgba(255, 255, 255, 0.3);
+            pointer-events: none;
+            text-align: center;
+            font-size: 9px;
+            color: rgba(255,255,255,0.4);
+            line-height: 14px;
+        }
+
+        .diagnosis-box {
+            background: #0f172a;
+            border-left: 4px solid var(--accent-blue);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            border-left-width: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .diagnosis-title {
+            font-size: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            color: var(--accent-blue);
+        }
+
+        .diagnosis-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .info-footer {
+            margin-top: 25px;
+            background: rgba(255,255,255,0.02);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            border: 1px dashed var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Simulatore Setup <span>Scorrevolezza 4T</span></h1>
+        <p>Analisi Dinamica e Matematica - Motore LO206 (Vega FX)</p>
+    </header>
+
+    <div class="chassis-selector">
+        <button class="btn-chassis active-crg" id="btn-crg" onclick="selectChassis('CRG')">
+            CRG FS4
+            <span>Tubo Ø 28mm (Morbido)</span>
+        </button>
+        <button class="btn-chassis" id="btn-gold" onclick="selectChassis('GOLD')">
+            GOLD GTR30
+            <span>Tubo Ø 30mm (Rigido)</span>
+        </button>
+    </div>
+
+    <div class="main-layout">
+        <div>
+            <div class="section-title">Contatto Asfalto & Pneumatici</div>
+            <div class="input-panel tire-panel">
+                <div class="input-group">
+                    <label>Condizioni Asfalto (Grip Pista)</label>
+                    <select id="param-track" onchange="calculateSetup()">
+                        <option value="verde">Pista Verde / Non Gommata (Scivolosa)</option>
+                        <option value="media" selected>Grip Medio (Standard/Libere)</option>
+                        <option value="alta">Pista Molto Gommata (Gara)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Pressione a Freddo (Vega FX) <span class="val-display" id="disp-press">0.55 bar</span></label>
+                    <input type="range" id="param-press" min="0.40" max="1.10" step="0.05" value="0.55" oninput="calculateSetup()">
+                </div>
+            </div>
+
+            <div class="section-title">Regolazioni Meccaniche (<span id="lbl-chassis-spec" style="color: var(--accent-red)">CRG 28mm</span>)</div>
+            <div class="input-panel">
+                <div class="input-group">
+                    <label>Carreggiata Anteriore <span class="val-display" id="disp-ant">120.0 cm</span></label>
+                    <input type="range" id="param-ant" min="118" max="124.5" step="0.4" value="120" oninput="calculateSetup()">
+                </div>
+
+                <div class="input-group">
+                    <label>Carreggiata Posteriore <span class="val-display" id="disp-post">138.0 cm</span></label>
+                    <input type="range" id="param-post" min="136" max="140" step="0.5" value="138" oninput="calculateSetup()">
+                </div>
+
+                <div class="input-group">
+                    <label>Caster Eccentrici <span class="val-display" id="disp-caster">0 Tacche (0.0°)</span></label>
+                    <input type="range" id="param-caster" min="-4" max="4" step="1" value="0" oninput="calculateSetup()">
+                </div>
+
+                <div class="input-group">
+                    <label>Altezza Avantreno</label>
+                    <select id="param-ant-height" onchange="calculateSetup()">
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Altezza Retrotreno</label>
+                    <select id="param-post-height" onchange="calculateSetup()">
+                        <option value="bassa">Bassa</option>
+                        <option value="media" selected>Media (Standard)</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Barra di Torsione Anteriore</label>
+                    <select id="param-barra" onchange="calculateSetup()">
+                        <option value="assente">Assente (Massima flessione del tubo)</option>
+                        <option value="teflon" selected>Teflon (Compromesso scorrevolezza)</option>
+                        <option value="acciaio">Acciaio (Massima reattività / Rigida)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Assale Posteriore</label>
+                    <select id="param-assale" onchange="calculateSetup()">
+                        <option value="morbido">Morbido (Aumenta Grip Laterale statico)</option>
+                        <option value="medio" selected>Medio (Standard)</option>
+                        <option value="rigido">Rigido (Aiuta lo scivolamento / Libera)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="output-panel">
+            <div class="section-title">Risposta Dinamica & Finestra di Scorrimento</div>
+            
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-title">Inserimento Anteriore (Direzionalità)</span>
+                    <span class="metric-value" id="val-txt-ant">50%</span>
+                </div>
+                <div class="progress-container">
+                    <div class="target-window" style="left: 60%; width: 10%;">60-70%</div>
+                    <div class="progress-bar" id="bar-ant" style="background-color: var(--accent-blue);"></div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-title">Jacking Effect & Flessione (Sollevamento Ruota)</span>
+                    <span class="metric-value" id="val-txt-jack">50%</span>
+                </div>
+                <div class="progress-container">
+                    <div class="target-window" style="left: 65%; width: 10%;">65-75%</div>
+                    <div class="progress-bar" id="bar-jack" style="background-color: var(--accent-gold);"></div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-title">Grip Laterale Posteriore (Tenuta in Curva)</span>
+                    <span class="metric-value" id="val-txt-post">50%</span>
+                </div>
+                <div class="progress-container">
+                    <div class="target-window" style="left: 45%; width: 5%;">45-50%</div>
+                    <div class="progress-bar" id="bar-post" style="background-color: var(--accent-green);"></div>
+                </div>
+            </div>
+
+            <div class="section-title">Ingegnere di Pista / Diagnosi Box</div>
+            <div class="diagnosis-box" id="diag-box">
+                <div class="diagnosis-title" id="diag-title">Analisi Setup...</div>
+                <div class="diagnosis-desc" id="diag-desc">Modifica i parametri per ricevere l'analisi telemetrica.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-footer">
+        <strong>Target Scorrevolezza (Finestra Magica):</strong> Per evitare che il motore LO206 "muri" a centro curva, punta ad avere l'Inserimento al 60-70%, il Jacking al 65-75% (ruota interna alzata stabilmente) e il Grip Laterale Posteriore libero al 45-50%. Se il grip dietro supera il 55%, il kart si "lega" a terra frenando il motore.
+    </div>
+</div>
+
+<script>
+    let activeChassis = 'CRG';
+
+    const inputAnt = document.getElementById('param-ant');
+    const inputPost = document.getElementById('param-post');
+    const inputCaster = document.getElementById('param-caster');
+    const selectAntHeight = document.getElementById('param-ant-height');
+    const selectPostHeight = document.getElementById('param-post-height');
+    const selectBarra = document.getElementById('param-barra');
+    const selectAssale = document.getElementById('param-assale');
+    const selectTrack = document.getElementById('param-track');
+    const inputPress = document.getElementById('param-press');
+
+    function selectChassis(chassis) {
+        activeChassis = chassis;
+        const btnCrg = document.getElementById('btn-crg');
+        const btnGold = document.getElementById('btn-gold');
+        const lblSpec = document.getElementById('lbl-chassis-spec');
+
+        if (chassis === 'CRG') {
+            btnCrg.className = 'btn-chassis active-crg';
+            btnGold.className = 'btn-chassis';
+            lblSpec.innerText = 'CRG 28mm (FS4)';
+            lblSpec.style.color = 'var(--accent-red)';
+
+            inputAnt.min = 118;
+            inputAnt.max = 124.5;
+            inputAnt.step = 0.4;
+            
+            selectAntHeight.innerHTML = `
+                <option value="bassa" selected>Bassa (Standard CRG)</option>
+                <option value="alta">Alta (Più reattività)</option>
+            `;
+        } else {
+            btnChassis = document.getElementById('btn-crg').className = 'btn-chassis';
+            btnGold.className = 'btn-chassis active-gold';
+            lblSpec.innerText = 'GOLD 30mm (GTR30)';
+            lblSpec.style.color = 'var(--accent-gold)';
+
+            inputAnt.min = 118.5;
+            inputAnt.max = 122.5;
+            inputAnt.step = 0.5;
+
+            selectAntHeight.innerHTML = `
+                <option value="bassa">Bassa</option>
+                <option value="media" selected>Media (Standard GOLD)</option>
+                <option value="alta">Alta</option>
+            `;
+
+            if (parseFloat(inputAnt.value) < 118.5) inputAnt.value = 118.5;
+            if (parseFloat(inputAnt.value) > 122.5) inputAnt.value = 122.5;
+        }
+        calculateSetup();
+    }
+
+    function calculateSetup() {
+        const aw = parseFloat(inputAnt.value);
+        const pw = parseFloat(inputPost.value);
+        const casterTacche = parseInt(inputCaster.value);
+        const ah = selectAntHeight.value;
+        const ph = selectPostHeight.value;
+        const barra = selectBarra.value;
+        const assale = selectAssale.value;
+        const track = selectTrack.value;
+        const press = parseFloat(inputPress.value);
+
+        // Aggiornamento Display
+        document.getElementById('disp-ant').innerText = aw.toFixed(1) + " cm";
+        document.getElementById('disp-post').innerText = pw.toFixed(1) + " cm";
+        document.getElementById('disp-press').innerText = press.toFixed(2) + " bar";
+        let sign = casterTacche > 0 ? "+" : "";
+        document.getElementById('disp-caster').innerText = sign + casterTacche + " Tacche (" + sign + (casterTacche * 0.9).toFixed(1) + "°)";
+
+        // ALGORITMO DINAMICO
+        let gripAnt = 50;
+        let jacking = 50;
+        let gripPost = 50;
+
+        // 1. Influenza diametro Tubo nativo
+        if (activeChassis === 'CRG') {
+            jacking += 6;
+            gripPost += 8;
+        } else {
+            gripAnt += 8;
+            gripPost -= 4;
+            jacking -= 4;
+        }
+
+        // 2. Influenza Carreggiate
+        gripAnt += (aw - 120) * 4;
+        jacking += (aw - 120) * 5; 
+        gripPost -= (pw - 138) * 8; 
+
+        // 3. Caster 
+        jacking += casterTacche * 4.5;
+        gripAnt += casterTacche * 3;
+
+        // 4. Altezze
+        if (ah === 'alta') { jacking += 4; gripAnt += 6; }
+        if (ah === 'media') { jacking += 2; gripAnt += 3; }
+        
+        if (ph === 'alta') { jacking += 10; gripPost -= 12; } 
+        if (ph === 'bassa') { jacking -= 8; gripPost += 12; }
+
+        // 5. Rigidità Componenti
+        if (barra === 'acciaio') { gripAnt += 12; jacking -= 3; } 
+        if (barra === 'none' || barra === 'assente') { gripAnt -= 5; jacking += 4; }
+
+        if (assale === 'morbido') { gripPost += 10; jacking -= 4; }
+        if (assale === 'rigido') { gripPost -= 10; jacking += 6; }
+
+        // 6. MODULO DINAMICO PNEUMATICI: Modello ad Interpolazione Lineare Continua (No dead-zones)
+        let pEffectAnt = 0; let pEffectPost = 0; let pEffectJack = 0;
+        let deltaPress = press - 0.40; // Spostamento relativo dal valore minimo dello slider (0.40 bar)
+
+        if (track === 'verde') {
+            // Pista scivolosa: pressioni basse portano la carcassa a cedere aumentando l'attrito volvente statico.
+            // Alzando la pressione la gomma si gonfia, riducendo la deriva strisciante e facendo scorrere il telaio.
+            pEffectAnt = -18 + (deltaPress * 45);   
+            pEffectPost = 22 - (deltaPress * 55);   
+            pEffectJack = -10 + (deltaPress * 25);  
+        } else if (track === 'media') {
+            // Pista standard: progressione lineare e bilanciata.
+            pEffectAnt = -12 + (deltaPress * 32);   
+            pEffectPost = 14 - (deltaPress * 42);   
+            pEffectJack = -2 + (deltaPress * 12);   
+        } else if (track === 'alta') {
+            // Pista gommata: l'effetto termico esaspera le pressioni.
+            // Pressioni alte riducono drasticamente l'impronta a terra (perdita di grip dietro) e alzano la reattività (jacking duro).
+            pEffectAnt = -6 + (deltaPress * 46);    
+            pEffectPost = 8 - (deltaPress * 58);    
+            pEffectJack = -7 + (deltaPress * 45);   
+        }
+
+        gripAnt += pEffectAnt;
+        gripPost += pEffectPost;
+        jacking += pEffectJack;
+
+        // Limiti Min/Max
+        gripAnt = Math.min(Math.max(Math.round(gripAnt), 10), 95);
+        jacking = Math.min(Math.max(Math.round(jacking), 10), 95);
+        gripPost = Math.min(Math.max(Math.round(gripPost), 10), 95);
+
+        // Aggiornamento Barre
+        document.getElementById('val-txt-ant').innerText = gripAnt + "%";
+        document.getElementById('bar-ant').style.width = gripAnt + "%";
+
+        document.getElementById('val-txt-jack').innerText = jacking + "%";
+        document.getElementById('bar-jack').style.width = jacking + "%";
+
+        document.getElementById('val-txt-post').innerText = gripPost + "%";
+        document.getElementById('bar-post').style.width = gripPost + "%";
+
+        // DIAGNOSTICA AVANZATA
+        const diagBox = document.getElementById('diag-box');
+        const diagTitle = document.getElementById('diag-title');
+        const diagDesc = document.getElementById('diag-desc');
+
+        let isAntOk = (gripAnt >= 60 && gripAnt <= 70);
+        let isJackOk = (jacking >= 65 && jacking <= 75);
+        let isPostOk = (gripPost >= 45 && gripPost <= 50);
+
+        diagBox.style.borderColor = "var(--border-color)";
+        diagTitle.style.color = "var(--accent-blue)";
+
+        // 1. Pericolo Pneumatici Estremo
+        if (track === 'alta' && press >= 0.80) {
+            diagTitle.innerText = "🚨 RISCHIO CHATTERING (PNEUMATICI)";
+            diagBox.style.borderColor = "var(--accent-red)";
+            diagTitle.style.color = "var(--accent-red)";
+            diagDesc.innerText = "Allarme! Hai impostato pressioni altissime su un asfalto molto gommato. La gomma dura non fletterà sulle forze G dell'asfalto innescando un violento saltellamento. Cuocerai la mescola in 3 giri. Abbassa drasticamente la pressione.";
+        
+        // 2. Pericolo Meccanico / Danni Fisici
+        } else if (jacking > 78 && (assale === 'morbido' || ph === 'alta')) {
+            diagTitle.innerText = "⚠️ RISCHIO SALTELLAMENTO (MECCANICO)";
+            diagBox.style.borderColor = "var(--accent-red)";
+            diagTitle.style.color = "var(--accent-red)";
+            diagDesc.innerText = "Hai un Jacking Effect elevatissimo unito ad un retrotreno rigido o alto. Sulle curve veloci il posteriore perderà aderenza per riprenderla violentemente, innescando un saltellamento micidiale per le costole. Abbassa il telaio o metti un assale più rigido per liberarlo.";
+        
+        // 3. Kart Inguidabile
+        } else if (activeChassis === 'GOLD' && barra === 'acciaio' && aw > 121) {
+            diagTitle.innerText = "⚡ ANTERIORE BLOCCHETTATO / REATTIVITÀ VIOLENTA";
+            diagBox.style.borderColor = "var(--accent-red)";
+            diagTitle.style.color = "var(--accent-red)";
+            diagDesc.innerText = "Il tubo da 30mm del GOLD con la barra in acciaio e carreggiata larga rende lo sterzo una lama ma blocca la torsione diagonale del kart a centro curva. Ottimo per una qualifica secca, ma distruggerà le gomme e la tua resistenza in gara.";
+        
+        // 4. Perdita Motore Drastica (Grip Verde)
+        } else if (track === 'verde' && press <= 0.65) {
+            diagTitle.innerText = "🐌 ATTRITO VOLVENTE ECCESSIVO";
+            diagBox.style.borderColor = "var(--accent-gold)";
+            diagTitle.style.color = "var(--accent-gold)";
+            diagDesc.innerText = "Pista verde, poco grip. Gonfiando a "+press.toFixed(2)+" bar, la carcassa della Vega FX collassa. Flettendo troppo creerà un attrito enorme che farà sprofondare i giri motore. Alza drasticamente la pressione per irrigidire la gomma e far scorrere il 4T!";
+        
+        // 5. ASSETTO PERFETTO
+        } else if (isAntOk && isJackOk && isPostOk) {
+            diagTitle.innerText = "🎯 SCORREVOLEZZA PERFETTA (ASSETTO MAGICO)";
+            diagBox.style.borderColor = "var(--accent-green)";
+            diagTitle.style.color = "var(--accent-green)";
+            diagDesc.innerText = "Incredibile! Sei entrato nella finestra ottimale di scorrimento. L'avantreno inserisce preciso, il telaio flette sollevando la ruota posteriore interna quel tanto che basta, e il retro accompagna la curva liberando i cavalli del LO206. Stampalo!";
+        
+        // 6. Problema: Troppo Grip Dietro
+        } else if (gripPost > 54) {
+            diagTitle.innerText = "❌ KART LEGATO / MOTORE SOFFOCATO";
+            diagBox.style.borderColor = "var(--accent-gold)";
+            diagTitle.style.color = "var(--accent-gold)";
+            diagDesc.innerText = "Il grip posteriore laterale è troppo alto ("+gripPost+"%). La ruota interna non si solleva bene. A centro curva il motore faticherà moltissimo a salire di giri. Allarga la carreggiata posteriore, alza il telaio dietro o monta un assale più rigido.";
+        
+        // 7. Problema: Mancanza Flessione
+        } else if (jacking < 60) {
+            diagTitle.innerText = "🧱 TELAIO PIATTO / MANCANZA DI JACKING";
+            diagBox.style.borderColor = "var(--accent-gold)";
+            diagTitle.style.color = "var(--accent-gold)";
+            diagDesc.innerText = "Il telaio non flette a sufficienza ("+jacking+"%). La ruota posteriore interna rimane a terra o si alza troppo poco a centro curva. Questo frena inevitabilmente il motore 4T. Aumenta il Caster, allarga l'anteriore o alza le altezze del telaio.";
+        
+        // 8. Problema: Eccesso Inserimento
+        } else if (gripAnt > 75) {
+            diagTitle.innerText = "🌪️ SOVRASTERZO IN INGRESSO / POSTERIORE LEGGERO";
+            diagBox.style.borderColor = "var(--accent-red)";
+            diagTitle.style.color = "var(--accent-red)";
+            diagDesc.innerText = "L'avantreno è troppo aggressivo ("+gripAnt+"%) rispetto al posteriore. In ingresso curva il kart girerà in modo troppo brusco, facendo perdere aderenza al retrotreno causando sovrasterzo. Riduci la carreggiata anteriore o rimuovi Caster/Barra.";
+
+        // 9. Problema: Poco Inserimento
+        } else if (gripAnt < 55) {
+            diagTitle.innerText = "📉 SOTTOSTERZO IN INGRESSO";
+            diagBox.style.borderColor = "var(--accent-blue)";
+            diagTitle.style.color = "var(--accent-blue)";
+            diagDesc.innerText = "L'avantreno non ha abbastanza direzionalità ("+gripAnt+"%). Quando giri il volante il kart tende a tirare dritto, costringendoti a rallentare troppo. Soluzione: allarga la carreggiata anteriore, aggiungi Caster positivo o monta la barra in Teflon.";
+        
+        // 10. Default Neutro
+        } else {
+            diagTitle.innerText = "⚖️ BILANCIAMENTO STANDARD NEUTRO";
+            diagBox.style.borderColor = "var(--accent-blue)";
+            diagTitle.style.color = "var(--accent-blue)";
+            diagDesc.innerText = "Il kart si trova in una configurazione sicura. Il bilanciamento è decente, ma per il 4T puoi cercare una maggiore scorrevolezza riducendo leggermente il grip posteriore o aumentando l'inserimento per far cantare di più il motore a centro curva.";
+        }
+    }
+
+    // Inizializzazione avvio
+    selectChassis('CRG');
+</script>
+
+</body>
+</html>
